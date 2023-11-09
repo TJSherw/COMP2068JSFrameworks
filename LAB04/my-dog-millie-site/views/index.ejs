@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Partial/Header -->
+    <%- include('header') %>
+
+
+      <div class="title">
+        <h1>
+          <%= title %>
+        </h1>
+        <p>Welcome to <%= title %>'s Website</p>
+      </div>
+
+      <!-- Picture of Millie -->
+      <div class="pumpkin">
+
+        <img src="./images/MilliePumpkin.jpg" alt="Pumpkin Millie">
+      </div>
+
+      <!-- Paragraph Section -->
+      <div class="paragraph">
+        <p>This is Millie, she is a Pure Bred German Shepard. She will be turning 1 on November 14th, 2023. Also, my
+          favourite colour is Yellow!</p>
+      </div>
+
+  </div>
+</body>
+
+</html>

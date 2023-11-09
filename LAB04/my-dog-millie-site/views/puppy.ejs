@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Partial/Header -->
+        <%- include('header') %>
+
+
+            <div class="title">
+                <h1>Millie as a <%= title %>
+                </h1>
+
+            </div>
+
+            <!-- Picture of Millie -->
+            <div class="pumpkin">
+
+                <img src="./images/MilliePuppy.jpg" alt="Puppy Millie">
+
+                <img src="./images/MilliePuppyTwo.jpg" alt="Puppy Millie Two">
+            </div>
+
+            <!-- Paragraph Section -->
+            <div class="paragraph">
+                <p>When Millie was a Puppy, her ears pointed inward.</p>
+            </div>
+
+    </div>
+</body>
+
+</html>
