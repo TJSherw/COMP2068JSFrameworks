@@ -6,3 +6,54 @@ body {
 a {
   color: #00B7FF;
 }
+
+/* Styling for home page */
+.products{
+
+  display: flex;
+  justify-content: space-around;
+}
+
+.PreWorkout {
+  flex: 1; 
+
+  border: 2px solid #000; 
+
+  padding: 10px;
+
+  text-align: center;
+}
+
+.Protein {
+  flex: 1; 
+
+  border: 2px solid #000; 
+
+  padding: 10px;
+
+  text-align: center;
+}
+
+.Creatine {
+  flex: 1; 
+
+  border: 2px solid #000; 
+
+  padding: 10px;
+
+  text-align: center;
+}
+
+.about {
+  flex: 1; 
+
+  border: 2px solid #000; 
+
+  padding: 10px;
+
+  text-align: center;
+}
+
+.detailed {
+  text-align: left;
+}
