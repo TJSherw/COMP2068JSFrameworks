@@ -1,0 +1,33 @@
+<h1>{{title}}</h1>
+
+{{!-- ref to add --}}
+<a href="../add">Add New PreWorkout</a>
+
+
+{{!-- table --}}
+<table>
+    <thead>
+        <th>Product</th>
+        <th>Image</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th></th>
+    </thead>
+    <tbody>
+        {{!-- db display --}}
+
+        {{#each dataset}}
+        <tr>
+            <td>{{this.product}}</td>
+            <td>{{this.image}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
+            <td>Edit/Remove</td>
+        </tr>
+
+        {{/each}}
+    </tbody>
+</table>
+
+
+{{!-- edit/delete --}}

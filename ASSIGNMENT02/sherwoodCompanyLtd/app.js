@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//var usersRouter = require('./routes/users');
 
 //export lib 
 var config = require('./config/global')
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //router
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 
 // config mongoose
 mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true}) // connect to
