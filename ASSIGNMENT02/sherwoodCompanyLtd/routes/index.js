@@ -9,19 +9,19 @@ router.get('/', function(req, res, next) {
 
 /* GET PreWorkout page. */
 router.get('/preworkout', function(req, res, next) {
-  res.render('preworkout', { title: 'Pre-Workout' });
+  res.render('preworkout/preworkout', { title: 'Pre-Workout' });
 });
 
 
 
 /* Get Protein Page */ 
 router.get('/protein', function(req, res, next) {
-  res.render('protein', { title: 'Protein' });
+  res.render('protein/protein', { title: 'Protein' });
 });
 
 /* GET Creatine page. */
 router.get('/creatine', function(req, res, next) {
-  res.render('creatine', { title: 'Creatine' });
+  res.render('creatine/creatine', { title: 'Creatine' });
 });
 
 

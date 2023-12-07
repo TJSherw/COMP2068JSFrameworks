@@ -7,6 +7,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+//export lib 
+var config = require('./config/global')
+var mongoose = require('mongoose');
+
 var app = express();
 
 // view engine setup
@@ -19,8 +23,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//router
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// config mongoose
+mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true}) // connect to
+.then((message)=>{
+  console.log('Connect Success');
+}) // after
+.catch((err)=>{
+  console.log('Error while connecting' + err);
+}); // catch
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

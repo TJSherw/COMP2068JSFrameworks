@@ -13,6 +13,7 @@
     "handlebars-helpers": "^0.10.0",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
+    "mongoose": "^8.0.2",
     "morgan": "~1.9.1"
   }
 }
