@@ -17,7 +17,7 @@ router.get('/preworkout', function (req, res, next) {
     if (err) {
       console.log(err);
     } else {
-      res.render('preworkouts/preworkout', { title: 'Pre-Workout', dataset: preworkouts, } );
+      res.render('preworkouts/preworkout', { title: 'Pre-Workout', dataset: preworkouts, });
     }
   });
 });
@@ -43,21 +43,33 @@ router.get('/add', function (req, res, next) {
 });
 
 //Post 
-router.post('/add', (req, res, next) =>{
+router.post('/add', (req, res, next) => {
   Preworkout.create({
     product: req.body.product,
     image: req.body.image,
     price: req.body.price,
     description: req.body.description
-  },(err, newPreworkout) =>{
-    if(err){
-    console.log(err);
+  }, (err, newPreworkout) => {
+    if (err) {
+      console.log(err);
     } else {
       res.redirect('../preworkout')
     }
   })
 });
 
+
+// deleted
+router.get('/delete/:_id', (req, res, next) => {
+
+  let preworkoutId = req.params._id;
+
+  Preworkout.remove(
+    { _id: preworkoutId }, // find id 
+    (err) => {
+      res.redirect('../preworkout');
+    });
+});
 
 // Creatine
 

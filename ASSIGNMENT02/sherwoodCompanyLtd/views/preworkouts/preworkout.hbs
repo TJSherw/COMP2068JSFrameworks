@@ -22,7 +22,10 @@
             <td>{{this.image}}</td>
             <td>{{this.price}}</td>
             <td>{{this.description}}</td>
-            <td>Edit/Remove</td>
+            <td>
+                <a href="../edit/{{this._id}}" class="btn btn-primary">Edit</a>
+                <a href="../delete/{{this._id}}" class="btn btn-danger" onclick="return confirmDelete()">Delete</a>
+            </td>
         </tr>
 
         {{/each}}
