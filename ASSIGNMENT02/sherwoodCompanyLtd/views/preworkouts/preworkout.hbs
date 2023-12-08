@@ -1,7 +1,9 @@
 <h1>{{title}}</h1>
 
+{{#if user}}
 {{!-- ref to add --}}
 <a href="../add">Add New PreWorkout</a>
+{{/if}}
 
 
 {{!-- table --}}
@@ -22,10 +24,13 @@
             <td>{{this.image}}</td>
             <td>{{this.price}}</td>
             <td>{{this.description}}</td>
+
+            {{#if ../user}}
             <td>
                 <a href="../edit/{{this._id}}" class="btn btn-primary">Edit</a>
                 <a href="../delete/{{this._id}}" class="btn btn-danger" onclick="return confirmDelete()">Delete</a>
             </td>
+            {{/if}}
         </tr>
 
         {{/each}}

@@ -4,6 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// import authentication
+const passport = require('passport');
+const session = require('express-session');
+
+const User = require('./models/user');
+
+var githubStrategy = require('passport-github2').Strategy;
+
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 
@@ -22,6 +30,47 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// config pass/sess
+app.use(session(
+  {
+    secret: "scl",
+    resave: false,
+    saveUninitialized: false
+  }
+));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.use(User.createStrategy());
+
+//git
+
+passport.use(new githubStrategy({
+  clientID: config.github.clientId,
+  clientSecret: config.github.clientSecret,
+  callbackURL: config.github.callbackURL
+},
+async (accessToken, refreshToken, profile, done) => {
+  const user = await User.findOne({ ouathId: profile.id});
+  if(user){
+    return done(null,user);
+  } else {
+    const newUser = new User ({
+      username: profile.username,
+      ouathId: profile.id,
+      ouathProvider: 'GitHub',
+      created: Date.now()
+    });
+    const savedUser = await newUser.save();
+    return done(null, savedUser);
+  }
+}));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 //router

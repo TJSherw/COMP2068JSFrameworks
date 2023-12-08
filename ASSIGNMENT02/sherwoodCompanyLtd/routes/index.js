@@ -4,15 +4,69 @@ var router = express.Router();
 const Preworkout = require('../models/preworkout'); //pre js
 const preworkout = require('../models/preworkout');
 
+var User = require('../models/user');
+var passport = require('passport');
+
 const Protein = require('../models/protein'); //pre js
 
 const Creatine = require('../models/creatine');
 
+
+// protect func
+function IsLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Sherwood Company Limited' });
+  res.render('index', { title: 'Sherwood Company Limited', user: req.user });
 });
 
+// Login ****************************************************************************************** 
+//get
+
+
+router.get("/login", (req, res, next) => {
+  let messages = req.session.messages || [];
+  req.session.messages; // always clear messages
+  res.render("login", { title: "Login", messages: messages });
+});
+
+
+// post
+router.post("/login", passport.authenticate(
+  "local", // strategy name
+  {
+    successRedirect: "./preworkout",
+    failureRedirect: "/login",
+    failureMessage: "Invalid Credentials"
+  }
+));
+
+
+//******************************************************************************************
+
+// Register  ******************************************************************************************
+//get
+router.get('/register', function (req, res, next) {
+  res.render('register', { title: 'Create a New Account' });
+});
+
+//post
+router.post('/register', (req, res, next) => {
+  User.register(
+    new User({ username: req.body.username }),
+    req.body.password,
+    (err, newUser) => {
+      req.login(newUser, (err) => { res.redirect('/preworkout'); });
+    }
+  );
+});
+
+//  ******************************************************************************************
 
 /* GET PreWorkout page. */
 router.get('/preworkout', function (req, res, next) {
@@ -22,7 +76,7 @@ router.get('/preworkout', function (req, res, next) {
     if (err) {
       console.log(err);
     } else {
-      res.render('preworkouts/preworkout', { title: 'Pre-Workout', dataset: preworkouts, });
+      res.render('preworkouts/preworkout', { title: 'Pre-Workout', dataset: preworkouts, user: req.user });
     }
   });
 });
@@ -37,7 +91,7 @@ router.get('/protein', function (req, res, next) {
       console.log(err);
     } else {
 
-      res.render('proteins/protein', { title: 'Protein', dataset: proteins, });
+      res.render('proteins/protein', { title: 'Protein', dataset: proteins, user: req.user });
     }
   });
 });
@@ -50,7 +104,7 @@ router.get('/creatine', function (req, res, next) {
       console.log(err);
     } else {
 
-      res.render('creatines/creatine', { title: 'Creatine', dataset: creatines, });
+      res.render('creatines/creatine', { title: 'Creatine', dataset: creatines, user: req.user });
     }
   });
 });
@@ -59,12 +113,12 @@ router.get('/creatine', function (req, res, next) {
 // PreWorkout ****************************************************************************************** 
 
 // GET handle
-router.get('/add', function (req, res, next) {
-  res.render('preworkouts/add', { title: 'Add' });
+router.get('/add', IsLoggedIn, function (req, res, next) {
+  res.render('preworkouts/add', { title: 'Add', user: req.user });
 });
 
 //Post 
-router.post('/add', (req, res, next) => {
+router.post('/add', IsLoggedIn, (req, res, next) => {
   Preworkout.create({
     product: req.body.product,
     image: req.body.image,
@@ -81,20 +135,21 @@ router.post('/add', (req, res, next) => {
 
 // U > Update a given project in DB by ID
 // GET /projects/edit/ID
-router.get("/edit/:_id", (req, res, next) => {
+router.get("/edit/:_id", IsLoggedIn, (req, res, next) => {
   Preworkout.findById(req.params._id, (err, preworkoutObj) => {
     Preworkout.find((err, preworkout) => {
       res.render("preworkouts/edit",
         {
           title: "Edit a Pre-Workout",
           preworkout: preworkoutObj,
+          user: req.user
 
         });
     });
   });
 });
 // POST /projects/edit/ID
-router.post("/edit/:_id", (req, res, next) => {
+router.post("/edit/:_id", IsLoggedIn, (req, res, next) => {
   Preworkout.findOneAndUpdate(
     { _id: req.params._id }, // filter to find the project
     {
@@ -108,7 +163,7 @@ router.post("/edit/:_id", (req, res, next) => {
 });
 
 // deleted
-router.get('/delete/:_id', (req, res, next) => {
+router.get('/delete/:_id', IsLoggedIn, (req, res, next) => {
 
   let preworkoutId = req.params._id;
 
@@ -124,12 +179,12 @@ router.get('/delete/:_id', (req, res, next) => {
 // Creatine  ****************************************************************************************** 
 
 // GET handle
-router.get('/addCreatine', function (req, res, next) {
-  res.render('creatines/addCreatine', { title: 'Add' });
+router.get('/addCreatine', IsLoggedIn, function (req, res, next) {
+  res.render('creatines/addCreatine', { title: 'Add', user: req.user });
 });
 
 //Post 
-router.post('/addCreatine', (req, res, next) => {
+router.post('/addCreatine', IsLoggedIn, (req, res, next) => {
   Creatine.create({
     product: req.body.product,
     image: req.body.image,
@@ -146,13 +201,14 @@ router.post('/addCreatine', (req, res, next) => {
 
 
 // edit
-router.get("/editCreatine/:_id", (req, res, next) => {
+router.get("/editCreatine/:_id", IsLoggedIn, (req, res, next) => {
   Creatine.findById(req.params._id, (err, creatineObj) => {
     Creatine.find((err, creatine) => {
       res.render("creatines/editCreatine",
         {
           title: "Edit a Creatine",
           creatine: creatineObj,
+          user: req.user
 
         });
     });
@@ -161,7 +217,7 @@ router.get("/editCreatine/:_id", (req, res, next) => {
 
 
 // POST /projects/edit/ID
-router.post("/editCreatine/:_id", (req, res, next) => {
+router.post("/editCreatine/:_id", IsLoggedIn, (req, res, next) => {
   Creatine.findOneAndUpdate(
     { _id: req.params._id }, // filter to find the project
     {
@@ -175,7 +231,7 @@ router.post("/editCreatine/:_id", (req, res, next) => {
 });
 
 // deleted
-router.get('/deleteCreatine/:_id', (req, res, next) => {
+router.get('/deleteCreatine/:_id', IsLoggedIn, (req, res, next) => {
 
   let creatineId = req.params._id;
 
@@ -194,12 +250,12 @@ router.get('/deleteCreatine/:_id', (req, res, next) => {
 
 
 // GET handle
-router.get('/addProtein', function (req, res, next) {
-  res.render('proteins/addProtein', { title: 'Add' });
+router.get('/addProtein', IsLoggedIn, function (req, res, next) {
+  res.render('proteins/addProtein', { title: 'Add', user: req.user });
 });
 
 //Post 
-router.post('/addProtein', (req, res, next) => {
+router.post('/addProtein', IsLoggedIn, (req, res, next) => {
   Protein.create({
     product: req.body.product,
     image: req.body.image,
@@ -216,13 +272,14 @@ router.post('/addProtein', (req, res, next) => {
 
 
 // edit
-router.get("/editProtein/:_id", (req, res, next) => {
+router.get("/editProtein/:_id", IsLoggedIn, (req, res, next) => {
   Protein.findById(req.params._id, (err, proteinObj) => {
     Protein.find((err, protein) => {
       res.render("proteins/editProtein",
         {
           title: "Edit a Protein",
           protein: proteinObj,
+          user: req.user
 
         });
     });
@@ -231,7 +288,7 @@ router.get("/editProtein/:_id", (req, res, next) => {
 
 
 // POST /projects/edit/ID
-router.post("/editProtein/:_id", (req, res, next) => {
+router.post("/editProtein/:_id", IsLoggedIn, (req, res, next) => {
   Protein.findOneAndUpdate(
     { _id: req.params._id }, // filter to find the project
     {
@@ -245,7 +302,7 @@ router.post("/editProtein/:_id", (req, res, next) => {
 });
 
 // deleted
-router.get('/deleteProtein/:_id', (req, res, next) => {
+router.get('/deleteProtein/:_id', IsLoggedIn, (req, res, next) => {
 
   let proteinId = req.params._id;
 
@@ -257,5 +314,23 @@ router.get('/deleteProtein/:_id', (req, res, next) => {
 });
 
 // *****************************************************************************************
+router.get('/logout', (req, res, next) => {
+  req.logout((err) => {
+    res.redirect('login');
+  })
+});
 
+
+
+// git hub 
+
+router.get('/gitHub', passport.authenticate('github', { scope: ['user.email'] }));
+
+
+router.get('/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  (req, res, next) => {
+    res.redirect('/preworkout');
+  })
+  
 module.exports = router;
